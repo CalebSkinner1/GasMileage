@@ -24,8 +24,6 @@ samples$delta |> colMeans() |> round(digits = 3)
 samples$sigma_2 |> mean()
 samples$theta |> mean()
 
-samples$delta |> as.mcmc() |> plot()
-
 # Analyze Delta ----------------------------------------------------------
 
 delta_samples <- samples$delta |> as_tibble() |>
@@ -53,7 +51,7 @@ delta_samples |>
   labs(
     x = "Gas Station",
     y = "Estimated MPG Change",
-    title = "Posterior Median and 95% Credible Intervals")
+    title = "Posterior Median and 90% Credible Intervals")
 
 
 
