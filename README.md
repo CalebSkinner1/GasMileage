@@ -7,15 +7,23 @@ Of course, each trip does not empty a tank of gas entirely. Assuming the gasolin
 I leverage the tank composition to infer the changes in miles per gallon for different gas stations. Admittedly, there are many other factors that determine a vehicles' miles per gallon. The weather, vehicle speed, and road conditions all play enormous roles. These are much too difficult to track, so I make the large assumption that these factors occur independent of the tank's composition. This is an unavoidable, albeit potentially problematic, assumption.
 
 I model the vehicles miles per gallon with a normal-normal hierarchical Bayesian model. The miles per gallon on a single trip for vehicle $i$ is distributed with normal errors:
+
 $$y_i | \alpha, \delta, \sigma^2, W_i \sim N(\alpha_i + W_i^T \delta, \sigma^2),$$
+
 where $\sigma^2$ is the variance, $\alpha_i$ is the vehicle-level coefficient, $\delta$ is the gas station-level coefficient vector, and $W_i$ is the car's tank composition. I place normal priors on both coefficients:
-$$\alpha_i|\theta, \tau \sim N(\theta, \tau), \\
-    \delta_j| \gamma \sim N(0, \gamma),$$
+
+$$\alpha_i|\theta, \tau \sim N(\theta, \tau),$$
+$$\delta_j| \gamma \sim N(0, \gamma),$$
+
 where $theta$ is the vehicle's prior mean, $\tau$ is the vehicle's prior variance, and $\gamma$ is the gas station's prior variance for the $j = 1, \ldots, p$ gas stations. To account for the uncertainty of $\theta$, I place another normal prior on $\theta$:
+
 $$\theta| \mu, \phi \sim N(\mu, \phi),$$
+
 where the prior mean $\mu$ should be typically fall between 20 and 30 to capture the mpg of a typical vehicle and the variance $\phi$ reflects the uncertainty of this estimate. I also place hierarchical half-Cauchy prior distributions on the variance parameters (Gelman, 2006):
-$$\sigma^2| \lambda_{\sigma} \sim \text{Half-Cauchy}(0, \lambda_{\sigma}), \\
-    \tau | \lambda_{\tau} \sim \text{Half-Cauchy}(0, \lambda_{\tau}), \\
-    \gamma | \lambda_{\gamma} \sim \text{Half-Cauchy}(0, \lambda_{\gamma}).$$
+
+$$\sigma^2| \lambda_{\sigma} \sim \text{Half-Cauchy}(0, \lambda_{\sigma}),$$
+$$\tau | \lambda_{\tau} \sim \text{Half-Cauchy}(0, \lambda_{\tau}),$$
+$$\gamma | \lambda_{\gamma} \sim \text{Half-Cauchy}(0, \lambda_{\gamma}).$$
+
 These Half-Cauchy distributions can be easily expressed as Inverse-Gamma distributions to enable efficient posterior sampling with a standard Gibbs sampler.
 
