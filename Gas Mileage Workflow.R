@@ -51,7 +51,7 @@ delta_samples |>
   labs(
     x = "Gas Station",
     y = "Estimated MPG Change",
-    title = "Posterior Median and 90% Credible Intervals")
+    title = "Posterior Median and 90% CI")
 
 
 
