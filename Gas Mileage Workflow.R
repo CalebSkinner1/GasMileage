@@ -17,12 +17,12 @@ groups <- gas_data$car
 W <- gas_data |> select(-mpg, -car) |> as.matrix()
 
 tic()
-samples <- gibbs_sampler(W, y, groups)
+samples <- gibbs_sampler(W, y, groups, iter = 20000, burn_in = 10000)
 toc()
-samples$alpha |> colMeans() |> round(digits = 3)
-samples$delta |> colMeans() |> round(digits = 3)
-samples$sigma_2 |> mean()
-samples$theta |> mean()
+# samples$alpha |> colMeans() |> round(digits = 3)
+# samples$delta |> colMeans() |> round(digits = 3)
+# samples$sigma_2 |> mean()
+# samples$theta |> mean()
 
 # Analyze Delta ----------------------------------------------------------
 
