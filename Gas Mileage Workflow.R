@@ -17,7 +17,7 @@ groups <- gas_data$car
 W <- gas_data |> select(-mpg, -car) |> as.matrix()
 
 tic()
-samples <- gibbs_sampler(W, y, groups, iter = 20000, burn_in = 10000)
+samples <- gibbs_sampler(W, y, groups, A_gamma = 1)
 toc()
 # samples$alpha |> colMeans() |> round(digits = 3)
 # samples$delta |> colMeans() |> round(digits = 3)
@@ -30,11 +30,11 @@ delta_samples <- samples$delta |> as_tibble() |>
   pivot_longer(cols = everything(), names_to = "gas_station", values_to = "mpg_change")
 
 # histogram
-delta_samples |>  
-  ggplot() +
-  geom_histogram(aes(x = mpg_change, fill = gas_station)) +
-  facet_wrap(~gas_station) +
-  theme(legend.position = "none")
+# delta_samples |>  
+#   ggplot() +
+#   geom_histogram(aes(x = mpg_change, fill = gas_station)) +
+#   facet_wrap(~gas_station) +
+#   theme(legend.position = "none")
 
 # error bars
 delta_samples |>

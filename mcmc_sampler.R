@@ -86,10 +86,12 @@ gibbs_sampler <- function(W, y, groups,
     lambda_tau <- rinvgamma(1, shape = 1, scale = 1/tau_current + 1/A_tau^2)
 
     # draw gamma|lambda_gamma
-    tau_current <- rinvgamma(1, shape = (p + 1)/2, rate = .5*sum(delta_current^2) + 1 / lambda_gamma)
+    gamma_current <- rinvgamma(1, shape = (p + 1)/2, rate = .5*sum(delta_current^2) + 1 / lambda_gamma)
 
     # draw lambda_gamma|gamma
     lambda_gamma <- rinvgamma(1, shape = 1, scale = 1/gamma_current + 1/A_gamma^2)
+
+
 
     # store parameters
     if(i > burn_in && (i - burn_in) %% thin == 0){
