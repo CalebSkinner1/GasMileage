@@ -6,15 +6,16 @@ library("readxl")
 library("tidyverse")
 library("janitor")
 
-gas <- read_excel("gas_data.xlsx") |>
+gas <- read_excel("gas_data.xlsx", col_types = c("text", "text", "numeric", "numeric")) |>
   clean_names() |> group_by(car) |>
   mutate(
     index = row_number(),
+    # compute gas mileage
     location = lead(location, 1),
     mpg = lead(miles/gallons, 1),
     m = lead(miles, 1),
     g = lead(gallons, 1)) |>
-  ungroup() |> drop_na() |>
+  ungroup() |> filter(!is.na(location)) |> 
   mutate(location = case_when(
     str_detect(location, "Love") ~ "Loves",
     location == "H-E-B" ~ "HEB",
@@ -27,9 +28,6 @@ gas <- read_excel("gas_data.xlsx") |>
   select(-miles)
 
 locations <- colnames(gas |> select(-car, -index, -mpg, -m, -g))
-
-
-# compute gas mileage
 
 # compute tank composition -----------------------------------------------
 
@@ -72,7 +70,10 @@ elantra <- compute_composition_wrapper(gas, composition, "Elantra")
 # CRV
 crv <- compute_composition_wrapper(gas, composition, "CRV")
 
-data <- bind_rows(elantra, crv) |>
+# Rogue
+rogue <- compute_composition_wrapper(gas, composition, "Rogue", tank_size = 14.5)
+
+data <- bind_rows(elantra, crv, rogue) |>
   rowwise() |> 
   mutate(tank = sum(c_across(all_of(locations)))) |>
   ungroup() |>
@@ -80,3 +81,4 @@ data <- bind_rows(elantra, crv) |>
   select(-index, -m, -g, -tank)
 
 write_csv(data, "gas_dataset.csv")
+
